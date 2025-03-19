@@ -8,25 +8,29 @@
 #include <cctype>
 using namespace std;
 
+//Namespace for utility functions such as clearing console, wait for input and clear input buffer  
 namespace N_Utility
 {
     class Utility
     {
     public:
+        //Function to clear screen based on the operating system
         static void clearConsole()
         {
 #ifdef _WIN32
-            system("cls");
+            system("cls");          //for windows
 #else
-            (void)system("clear");
+            (void)system("clear");      //for other systems
 #endif
         }
 
+        //Function to wait till user press Enter
         static void waitForEnter()
         {
             cin.get();
         }
 
+        //Function to clear any buffer and handle any leftover input
         static void clearInputBuffer()
         {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -34,29 +38,28 @@ namespace N_Utility
     };
 }
 
+// Namespace for character related classes and enum classes
 namespace N_Character
 {
+    //Enum class that contains item that player can acquire
     enum class Item
     {
         NONE = 1, MAP, SWORD, SHIELD, ARMOUR, BOW
     };
 
-    enum class Enemies
-    {
-        GOBLIN = 1, TROLL = 2, ORGE = 3, DARK_ELF = 4, HOBGOBLIN = 5
-    };
-
+    //Base class For character (player and enemies derived classes
     class Character
     {
     protected:
-        string name;
-        int health;
-        int maxHealth;
-        int meleeDamage;
-        int rangedDamage;
-        int defense;
+        string name;                    //Name of the character
+        int health;                     //Current health
+        int maxHealth;                  //Maximum health
+        int meleeDamage;                //Damage dealt by melee attack
+        int rangedDamage;               //Damage dealt by ranged attack
+        int defense;                    //Defense health points
 
     public:
+        //Default constructor 
         Character()
         {
             name = "Unknown";
@@ -67,10 +70,12 @@ namespace N_Character
             defense = 3;
         }
 
+        //Parameterized constructor
         Character(string name, int health, int maxHealth, int meleeDamage, int rangedDamage, int defense) :
             name(name), health(health), maxHealth(maxHealth), meleeDamage(meleeDamage), rangedDamage(rangedDamage), defense(defense) {
         }
 
+        //Copy constructor
         Character(const Character& other)
         {
             name = other.name;
@@ -81,8 +86,10 @@ namespace N_Character
             defense = other.defense;
         }
 
+        //destructor
         ~Character() {}
 
+        //Display the items depending upon level
         void displayItems(int level) const
         {
             string item;
@@ -110,9 +117,10 @@ namespace N_Character
             std::cout << item;
         }
 
-
+        //Pure virtual function for attacking 
         virtual void attack(Character& target, int index) = 0;
 
+        //Getters for character atributes which are protected 
         string getName() { return name; }
         int getHealth() { return health; }
         int getMaxHealth() { return maxHealth; }
@@ -121,12 +129,14 @@ namespace N_Character
         int getDefence() { return defense; }
         bool isFainted() const { return health <= 0; }
 
+        //Function to heal
         void heal(int healAmount)
         {
             health += healAmount;
             if (health >= maxHealth) health = maxHealth;
         }
 
+        //Function to take damage from target and return health
         int takeDamage(int damage)
         {
             int actualDamage = damage - defense;
@@ -136,15 +146,12 @@ namespace N_Character
             return health;
         }
     };
-}
 
-namespace N_Game
-{
-    using namespace N_Character;
-
+    //Derived player class inherits from character class
     class Player : public Character
     {
     public:
+        //Default constructor
         Player()
         {
             name = "Kael";
@@ -155,10 +162,12 @@ namespace N_Game
             defense = 3;
         }
 
+        //Parameterized constructor
         Player(string p_name, int p_health, int p_maxHealth, int p_meleeDamage, int p_rangedDamage, int p_defence) :
             Character(p_name, p_health, p_maxHealth, p_meleeDamage, p_rangedDamage, p_defence) {
         }
 
+        //Function to reset players stat to default values while restart
         void reset()
         {
             name = "Kael";
@@ -169,6 +178,7 @@ namespace N_Game
             defense = 3;
         }
 
+        //Function to display player stats based on levels and passing levels to displayItems method 
         void displayPlayerStat(int level)
         {
             std::cout << "Player name:" << getName() << endl;
@@ -182,75 +192,81 @@ namespace N_Game
             std::cout << "!" << endl;
         }
 
+        //Function to increase player stat after each level
         void increasePlayerStat(int level)
         {
             switch (level)
             {
             case 1:
-                maxHealth += 20;
-                health = maxHealth;
-                rangedDamage += 10;
-                meleeDamage += 5;
-                defense += 2;
-                break;
-            case 2:
                 maxHealth += 30;
                 health = maxHealth;
                 rangedDamage += 15;
                 meleeDamage += 10;
-                defense += 3;
+                defense += 5;
                 break;
-            case 3:
+            case 2:
                 maxHealth += 40;
                 health = maxHealth;
                 rangedDamage += 20;
                 meleeDamage += 15;
-                defense += 5;
+                defense += 7;
                 break;
-            case 4:
+            case 3:
                 maxHealth += 50;
                 health = maxHealth;
                 rangedDamage += 25;
                 meleeDamage += 20;
-                defense += 7;
+                defense += 10;
+                break;
+            case 4:
+                maxHealth += 60;
+                health = maxHealth;
+                rangedDamage += 30;
+                meleeDamage += 20;
+                defense += 12;
                 break;
             case 5:
                 maxHealth += 60;
                 health = maxHealth;
-                rangedDamage += 30;
-                meleeDamage += 25;
-                defense += 10;
+                rangedDamage += 35;
+                meleeDamage += 30;
+                defense += 15;
                 break;
             }
         }
 
+        //Function to override attack method form base class Character
         void attack(Character& target, int index) override
         {
-            int chooseDamage = rand() % 10;
-            if (chooseDamage == 3)
+            int chooseDamage = rand() % 10;         //Randomly chose to attack type 
+            if (chooseDamage == 3)                  //Special move logic (10 % chances)
             {
                 cout << "The special move is ready and now in action." << endl;
-                int tempDamage = 2 * getRangedDamage();
-                target.takeDamage(tempDamage);
+                int tempDamage = 2 * getRangedDamage();        //Variable to perform temperary dmage  and giving damage twite of the ranged damage
+                target.takeDamage(tempDamage);      //passing temperary damage to takedamage method of current object 
             }
-            else if (chooseDamage == 2 || chooseDamage == 5)
+            else if (chooseDamage == 2 || chooseDamage == 5) //Ranged attack damage logic (20 % chances) 
             {
                 cout << getName() << " launches a powerful ranged attack!" << endl;
                 target.takeDamage(getRangedDamage());
             }
             else
             {
+                //Set default attack type to melee (70 % chances)
                 cout << getName() << " delivers a crushing melee blow!" << endl;
                 target.takeDamage(getMeleeDamage());
             }
         }
     };
 
+    //Derived Enemy class inherits from character class
     class Enemy : public Character
     {
     public:
+        //Vector to store enemies
         vector<Enemy> minions;
 
+        //Default constructor
         Enemy()
         {
             name = "Goblin";
@@ -261,10 +277,12 @@ namespace N_Game
             defense = 2;
         }
 
+        //Parameterized constructor 
         Enemy(string e_name, int e_health, int e_maxHealth, int e_meleeDamage, int e_rangedDamage, int e_defence) :
             Character(e_name, e_health, e_maxHealth, e_meleeDamage, e_rangedDamage, e_defence) {
         }
 
+        //Function to get enemies name 
         string getEnemyName() const
         {
             if (name == "Goblin")
@@ -295,21 +313,24 @@ namespace N_Game
                 return "Unknown";
         }
 
+        //Function to override attack method form base class Character
         void attack(Character& target, int index) override
         {
-            int chooseDamage = rand() % 3;
-            if (chooseDamage == 2)
+            int chooseDamage = rand() % 3;  //Variable to chose attack type 
+            if (chooseDamage == 2)  //Ranged attack type logic (33 % chances) 
             {
-                cout << getName() << " unleashes a ranged attack!" << endl;
-                target.takeDamage(getRangedDamage());
+                std::cout << getName() << " unleashes a ranged attack!" << endl;  //Getting name of object and providing type of attack with print function
+                target.takeDamage(getRangedDamage()); 
             }
             else
             {
-                cout << getName() << " unleashes a melee attack!" << endl;
+                //Setting melee attack as default attack type (67 % chances) 
+                std::cout << getName() << " unleashes a melee attack!" << endl;
                 target.takeDamage(getMeleeDamage());
             }
         }
 
+        //Fucntion to display enemy stat by level 
         void displayEnemyStat(int level)
         {
             for (size_t i = 0; i < minions.size(); i++)
@@ -328,7 +349,12 @@ namespace N_Game
         }
     };
 
-    class Game;
+}
+
+//Namespace game providing forward declaration of game class
+namespace N_Game
+{
+    class Game;  
 }
 
 namespace N_Narration
@@ -371,6 +397,8 @@ namespace N_Game
         {
             string input;
             getline(cin, input);
+            input.erase(0, input.find_first_not_of(' '));
+            input.erase(input.find_last_not_of(' ') + 1);
             transform(input.begin(), input.end(), input.begin(), ::toupper);
             return input;
         }
@@ -505,9 +533,9 @@ namespace N_BattleManager
     class BattleManager
     {
     private:
+        Game& game;
         bool battleOngoing;
         bool playerTurn;
-        Game& game;
 
     public:
         BattleManager(Game& gameRef) : game(gameRef), battleOngoing(false), playerTurn(true) {}
@@ -526,7 +554,7 @@ namespace N_BattleManager
 
         void battle(int level)
         {
-            int healCounter = 0;
+            int healCooldown = 0;
 
             for (size_t i = 0; i < game.getEnemy().minions.size(); i++)
             {
@@ -569,50 +597,52 @@ namespace N_BattleManager
                         else if (input == "2")
                         {
                             // Player chooses to heal
-                            int healAmount = 20; // Default heal amount
-                            if (level >= 3 && level <= 4)
-                            {
-                                healAmount = 50; // Increase heal amount for higher levels
-                            }
-                            else if (level >= 5)
-                            {
-                                healAmount = 100; // Further increase for final levels
-                            }
-                            int healCooldown = 0;
                             if (healCooldown == 0)
                             {
+                                int healAmount = 20;
+                                switch (level)
+                                {
+                                case 1:
+                                    healAmount = 20;
+                                    break;
+                                case 2:
+                                    healAmount = 30;
+                                    break;
+                                case 3:
+                                    healAmount = 40;
+                                    break;
+                                case 4:
+                                    healAmount = 50;
+                                    break;
+                                case 5:
+                                    healAmount = 70;
+                                    break;
+                                case 6:
+                                    healAmount = 90;
+                                    break;
+                                }
                                 game.getPlayer().heal(healAmount);
                                 healCooldown = 3;
                                 cout << game.getPlayer().getName() << " heals for " << healAmount << " HP!" << endl;
                             }
                             else
                             {
-                                cout << game.getPlayer().getName() << " cannot heal yet. Cooldown: " << healCooldown << " turns remaining." << endl;
+                                cout << game.getPlayer().getName() << " cannot heal yet. Cooldown: " << healCooldown << " turns remaining and wasted one turn." << endl;
                             }
+                        }
+
+                        if (healCooldown > 0)
+                        {
                             healCooldown--;
                         }
                     }
                     else
                     {
-                        healCounter = 0;
-                        if (healCounter >= 3)
+                        int chooseMove = rand() % 10;
+                        if (chooseMove == 2)
                         {
-                            int chooseMove = rand() % 5;
-                            if (chooseMove == 2)
-                            {
-                                game.getEnemy().minions[i].heal(25);
-                                std::cout << game.getEnemy().minions[i].getEnemyName() << " healed for 25 HP!" << endl;
-                                healCounter = 0;
-                            }
-                            else
-                            {
-                                game.getEnemy().minions[i].attack(game.getPlayer(), i);
-                                if (!game.getPlayer().isFainted())
-                                {
-                                    cout << game.getPlayer().getName() << " has " << game.getPlayer().getHealth() << " HP left." << endl;
-                                }
-                                healCounter++;
-                            }
+                            game.getEnemy().minions[i].heal(25);
+                            std::cout << game.getEnemy().minions[i].getEnemyName() << " healed for 25 HP!" << endl;
                         }
                         else
                         {
@@ -621,7 +651,6 @@ namespace N_BattleManager
                             {
                                 cout << game.getPlayer().getName() << " has " << game.getPlayer().getHealth() << " HP left." << endl;
                             }
-                            healCounter++;
                         }
                     }
 
@@ -768,6 +797,7 @@ namespace N_Game {
             "\nyourself, brave one, for the path ahead is treacherous." << endl;
         std::cout << "\n[Press Enter to continue...]" << endl;
         Utility::waitForEnter();
+        std::cout << "\nBefore starting battle you should know when you heal, it will take three\nturns to reactivate healing." << endl;
     }
 
     void Game::displayLevelTitle(int level)
