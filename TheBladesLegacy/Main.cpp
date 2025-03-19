@@ -54,21 +54,21 @@ namespace N_Character
         int maxHealth;
         int meleeDamage;
         int rangedDamage;
-        int defence;
+        int defense;
 
     public:
         Character()
         {
             name = "Unknown";
-            health = 100;
-            maxHealth = 100;
-            meleeDamage = 20;
-            rangedDamage = 10;
-            defence = 8;
+            health = 60;
+            maxHealth = 60;
+            rangedDamage = 20;
+            meleeDamage = 10;
+            defense = 3;
         }
 
-        Character(string name, int health, int maxHealth, int meleeDamage, int rangedDamage, int defence) :
-            name(name), health(health), maxHealth(maxHealth), meleeDamage(meleeDamage), rangedDamage(rangedDamage), defence(defence) {
+        Character(string name, int health, int maxHealth, int meleeDamage, int rangedDamage, int defense) :
+            name(name), health(health), maxHealth(maxHealth), meleeDamage(meleeDamage), rangedDamage(rangedDamage), defense(defense) {
         }
 
         Character(const Character& other)
@@ -78,7 +78,7 @@ namespace N_Character
             maxHealth = other.maxHealth;
             meleeDamage = other.meleeDamage;
             rangedDamage = other.rangedDamage;
-            defence = other.defence;
+            defense = other.defense;
         }
 
         ~Character() {}
@@ -110,26 +110,26 @@ namespace N_Character
             std::cout << item;
         }
 
-        virtual void attack(Character& target) = 0;
+
+        virtual void attack(Character& target, int index) = 0;
 
         string getName() { return name; }
         int getHealth() { return health; }
         int getMaxHealth() { return maxHealth; }
         int getMeleeDamage() { return meleeDamage; }
         int getRangedDamage() { return rangedDamage; }
-        int getDefence() { return defence; }
+        int getDefence() { return defense; }
         bool isFainted() const { return health <= 0; }
 
-        int heal(int healAmount)
+        void heal(int healAmount)
         {
             health += healAmount;
             if (health >= maxHealth) health = maxHealth;
-            return health;
         }
 
         int takeDamage(int damage)
         {
-            int actualDamage = damage - defence;
+            int actualDamage = damage - defense;
             if (actualDamage < 0) actualDamage = 0;
             health -= actualDamage;
             if (health < 0) health = 0;
@@ -148,11 +148,11 @@ namespace N_Game
         Player()
         {
             name = "Kael";
-            health = 100;
-            maxHealth = 100;
+            health = 60;
+            maxHealth = 60;
             rangedDamage = 20;
             meleeDamage = 10;
-            defence = 8;
+            defense = 3;
         }
 
         Player(string p_name, int p_health, int p_maxHealth, int p_meleeDamage, int p_rangedDamage, int p_defence) :
@@ -162,11 +162,11 @@ namespace N_Game
         void reset()
         {
             name = "Kael";
-            health = 100;
-            maxHealth = 100;
+            health = 60;
+            maxHealth = 60;
             rangedDamage = 20;
             meleeDamage = 10;
-            defence = 8;
+            defense = 3;
         }
 
         void displayPlayerStat(int level)
@@ -187,60 +187,61 @@ namespace N_Game
             switch (level)
             {
             case 1:
-                maxHealth += 80;
+                maxHealth += 20;
                 health = maxHealth;
-                rangedDamage += 20;
-                meleeDamage += 10;
-                defence += 7;
+                rangedDamage += 10;
+                meleeDamage += 5;
+                defense += 2;
                 break;
             case 2:
-                maxHealth += 120;
+                maxHealth += 30;
                 health = maxHealth;
-                rangedDamage += 40;
-                meleeDamage += 25;
-                defence += 15;
+                rangedDamage += 15;
+                meleeDamage += 10;
+                defense += 3;
                 break;
             case 3:
-                maxHealth += 200;
+                maxHealth += 40;
                 health = maxHealth;
-                rangedDamage += 80;
-                meleeDamage += 50;
-                defence += 45;
+                rangedDamage += 20;
+                meleeDamage += 15;
+                defense += 5;
                 break;
             case 4:
-                maxHealth += 300;
+                maxHealth += 50;
                 health = maxHealth;
-                rangedDamage += 160;
-                meleeDamage += 100;
-                defence += 135;
+                rangedDamage += 25;
+                meleeDamage += 20;
+                defense += 7;
                 break;
             case 5:
-                maxHealth += 400;
+                maxHealth += 60;
                 health = maxHealth;
-                rangedDamage += 320;
-                meleeDamage += 200;
-                defence += 350;
+                rangedDamage += 30;
+                meleeDamage += 25;
+                defense += 10;
                 break;
             }
         }
 
-
-        void attack(Character& target) override
+        void attack(Character& target, int index) override
         {
             int chooseDamage = rand() % 10;
             if (chooseDamage == 3)
             {
                 cout << "The special move is ready and now in action." << endl;
-                int tempDamage = 3 * getRangedDamage();
+                int tempDamage = 2 * getRangedDamage();
                 target.takeDamage(tempDamage);
             }
-            else if (chooseDamage == 2 || chooseDamage == 4 || chooseDamage == 6)
+            else if (chooseDamage == 2 || chooseDamage == 5)
             {
-                target.takeDamage(getMeleeDamage());
+                cout << getName() << " launches a powerful ranged attack!" << endl;
+                target.takeDamage(getRangedDamage());
             }
             else
             {
-                target.takeDamage(getRangedDamage());
+                cout << getName() << " delivers a crushing melee blow!" << endl;
+                target.takeDamage(getMeleeDamage());
             }
         }
     };
@@ -253,11 +254,11 @@ namespace N_Game
         Enemy()
         {
             name = "Goblin";
-            health = 55;
-            maxHealth = 55;
-            rangedDamage = 10;
-            meleeDamage = 5;
-            defence = 2;
+            health = 50;
+            maxHealth = 50;
+            rangedDamage = 15;
+            meleeDamage = 10;
+            defense = 2;
         }
 
         Enemy(string e_name, int e_health, int e_maxHealth, int e_meleeDamage, int e_rangedDamage, int e_defence) :
@@ -291,18 +292,20 @@ namespace N_Game
                 return "Murlock";
             }
             else
-                return "Unknonw";
+                return "Unknown";
         }
 
-        void attack(Character& target) override
+        void attack(Character& target, int index) override
         {
             int chooseDamage = rand() % 3;
             if (chooseDamage == 2)
             {
+                cout << getName() << " unleashes a ranged attack!" << endl;
                 target.takeDamage(getRangedDamage());
             }
             else
             {
+                cout << getName() << " unleashes a melee attack!" << endl;
                 target.takeDamage(getMeleeDamage());
             }
         }
@@ -326,52 +329,44 @@ namespace N_Game
     };
 
     class Game;
-
 }
 
 namespace N_Narration
 {
-    using namespace N_Utility;
-
     class Narration
     {
     public:
-        void gameName()
-        {
-            std::cout << "**-----------------------------------------------------------------------**" << endl;
-            std::cout << "                 Eclipse of Astralon: The Blade's Legacy                   " << endl;
-            std::cout << "**-----------------------------------------------------------------------**" << endl;
-            introMessage();
-        }
-
-        void introMessage()
-        {
-            std::cout << "\nWelcome, brave warrior. You are Kael of Astralon, known as Soulbinder\n"
-                "a legendary hero of Luminara. You are about to embark on a journey that\n"
-                "will test your courage, wisdom, and strength. The fate of a village-and\n"
-                "perhaps the world-rests in your hands. Are you ready to rise to the challenge?" << endl;
-            std::cout << "\n[Press Enter to continue...]" << endl;
-            Utility::waitForEnter();
-        }
-
-        void eldersMessage(N_Game::Game& game);
+        void gameName();
         void midStoryPart(N_Game::Game& game);
+        void eldersMessage(N_Game::Game& game);
+        void introMessage();
     };
 }
 
 namespace N_Game
 {
-    using namespace N_Character;
     using namespace N_Utility;
+    using namespace N_Character;
+    using namespace N_Narration;
 
     class Game
     {
-        N_Narration::Narration introStory;
+        N_Narration::Narration* introStory;
         bool isPlaying = true;
         int level = 1;
+        Player player;
+        Enemy enemy;
 
     public:
+        Game()
+        {
+            introStory = new Narration();
+        }
 
+        ~Game()
+        {
+            delete introStory;
+        }
         string getInput()
         {
             string input;
@@ -380,15 +375,18 @@ namespace N_Game
             return input;
         }
 
-        void gameLoop(Player& player)
+        Player& getPlayer() { return player; }
+        Enemy& getEnemy() { return enemy; }
+
+        void gameLoop()
         {
             while (true)
             {
-                introStory.gameName();
-                introStory.eldersMessage(*this);
+                introStory->gameName();
+                introStory->eldersMessage(*this);
                 while (isPlaying && level <= 6)
                 {
-                    enterLevel(level, player);
+                    enterLevel(level);
                     if (player.isFainted())
                     {
                         cout << "You have been defeated. Game Over!" << endl;
@@ -397,7 +395,7 @@ namespace N_Game
                     }
                     else
                     {
-                        increasePlayerStat(level, player);
+                        increasePlayerStat(level);
                     }
                     level++;
                 }
@@ -426,25 +424,40 @@ namespace N_Game
             }
         }
 
-
         void handleStartInput();
         void handleRequestAccept();
         void handleContinueInput();
         void handleContinuePart();
-        void enterLevel(int level, Player& player);
-        void displayLevelStats(int level, Player& player, Enemy& enemy);
-        void increasePlayerStat(int level, Player& player);
+        void enterLevel(int level);
+        void displayLevelStats(int level);
+        void increasePlayerStat(int level);
         void displayLevelTitle(int level);
-        void restartGame(Game& game, Player& player);
     };
 }
 
 namespace N_Narration
 {
-    using namespace N_Game;
     using namespace N_Utility;
 
-    void Narration::eldersMessage(Game& game)
+    void Narration::gameName()
+    {
+        std::cout << "**-----------------------------------------------------------------------**" << endl;
+        std::cout << "                 Eclipse of Astralon: The Blade's Legacy                   " << endl;
+        std::cout << "**-----------------------------------------------------------------------**" << endl;
+        introMessage();
+    }
+
+    void Narration::introMessage()
+    {
+        std::cout << "\nWelcome, brave warrior. You are Kael of Astralon, known as Soulbinder\n"
+            "a legendary hero of Luminara. You are about to embark on a journey that\n"
+            "will test your courage, wisdom, and strength. The fate of a village-and\n"
+            "perhaps the world-rests in your hands. Are you ready to rise to the challenge?" << endl;
+        std::cout << "\n[Press Enter to continue...]" << endl;
+        Utility::waitForEnter();
+    }
+
+    void Narration::eldersMessage(N_Game::Game& game)
     {
         std::cout << "\nElder's Message: \"Greetings, Kael. I am Elder Thalos, a guardian of the"
             "\nvillage of Luminara, nestled in the heart of the Kingdom of Astralon. Our"
@@ -460,7 +473,7 @@ namespace N_Narration
         game.handleStartInput();
     }
 
-    void Narration::midStoryPart(Game& game)
+    void Narration::midStoryPart(N_Game::Game& game)
     {
         Utility::clearConsole();
         std::cout << "Long ago, Luminara was a beacon of peace and prosperity in the Kingdom of Astralon."
@@ -487,18 +500,18 @@ namespace N_Narration
 namespace N_BattleManager
 {
     using namespace N_Game;
-
-    Player player;
-    Enemy enemy;
-    Game game;
+    using namespace N_Utility;
 
     class BattleManager
     {
     private:
         bool battleOngoing;
         bool playerTurn;
+        Game& game;
 
     public:
+        BattleManager(Game& gameRef) : game(gameRef), battleOngoing(false), playerTurn(true) {}
+
         void startBattle(int level)
         {
             playerTurn = true;
@@ -513,86 +526,143 @@ namespace N_BattleManager
 
         void battle(int level)
         {
-            for (size_t i = 0; i < enemy.minions.size(); i++)
+            int healCounter = 0;
+
+            for (size_t i = 0; i < game.getEnemy().minions.size(); i++)
             {
+                battleOngoing = true; // Reset battle state for each minion
                 while (battleOngoing)
                 {
                     if (playerTurn)
                     {
-                        std::cout << "Select form the following moves!" << endl;
+                        // Prompt the player to select a move
+                        std::cout << "Select from the following moves!" << endl;
                         std::cout << "1. Attack" << endl;
                         std::cout << "2. Heal" << endl;
-                        string input = game.getInput();
+                        string input;
+                        while (true)
+                        {
+                            input = game.getInput();
+                            if (input == "1" || input == "2")
+                            {
+                                break; // Valid input, exit the loop
+                            }
+                            else
+                            {
+                                std::cout << "Invalid input! Press 1 to Attack or 2 to Heal." << endl;
+                            }
+                        }
+
                         if (input == "1")
                         {
-                            player.attack(enemy.minions[i]);
+                            // Player chooses to attack
+                            game.getPlayer().attack(game.getEnemy().minions[i], i);
+                            if (game.getEnemy().minions[i].isFainted())
+                            {
+                                std::cout << "The " << game.getEnemy().minions[i].getEnemyName() << " falls to the ground, defeated!" << endl;
+                            }
+                            else
+                            {
+                                std::cout << game.getEnemy().minions[i].getEnemyName() << " has " << game.getEnemy().minions[i].getHealth() << " HP left." << endl;
+                            }
                         }
                         else if (input == "2")
                         {
-                            int healAmount = 20;
-                            if (level <= 2)
+                            // Player chooses to heal
+                            int healAmount = 20; // Default heal amount
+                            if (level >= 3 && level <= 4)
                             {
-                                player.heal(healAmount);
-
-                            }
-                            else if (level >= 3 && level <= 4)
-                            {
-                                healAmount += 60;
-
+                                healAmount = 50; // Increase heal amount for higher levels
                             }
                             else if (level >= 5)
                             {
-                                healAmount += 90;
+                                healAmount = 100; // Further increase for final levels
                             }
+                            int healCooldown = 0;
+                            if (healCooldown == 0)
+                            {
+                                game.getPlayer().heal(healAmount);
+                                healCooldown = 3;
+                                cout << game.getPlayer().getName() << " heals for " << healAmount << " HP!" << endl;
+                            }
+                            else
+                            {
+                                cout << game.getPlayer().getName() << " cannot heal yet. Cooldown: " << healCooldown << " turns remaining." << endl;
+                            }
+                            healCooldown--;
                         }
                     }
                     else
                     {
-                        int chooseMove = rand() % 2;
-                        if (chooseMove == 1)
+                        healCounter = 0;
+                        if (healCounter >= 3)
                         {
-                            enemy.minions[i].attack(player);
+                            int chooseMove = rand() % 5;
+                            if (chooseMove == 2)
+                            {
+                                game.getEnemy().minions[i].heal(25);
+                                std::cout << game.getEnemy().minions[i].getEnemyName() << " healed for 25 HP!" << endl;
+                                healCounter = 0;
+                            }
+                            else
+                            {
+                                game.getEnemy().minions[i].attack(game.getPlayer(), i);
+                                if (!game.getPlayer().isFainted())
+                                {
+                                    cout << game.getPlayer().getName() << " has " << game.getPlayer().getHealth() << " HP left." << endl;
+                                }
+                                healCounter++;
+                            }
                         }
                         else
                         {
-                            enemy.minions[i].heal(25);
-                            std::cout << enemy.minions[i].getEnemyName() << " healed itself for 25 hp!" << endl;
+                            game.getEnemy().minions[i].attack(game.getPlayer(), i);
+                            if (!game.getPlayer().isFainted())
+                            {
+                                cout << game.getPlayer().getName() << " has " << game.getPlayer().getHealth() << " HP left." << endl;
+                            }
+                            healCounter++;
                         }
                     }
 
+                    // Update battle state
                     updateBattleState(i);
 
+                    // Toggle player turn
                     playerTurn = !playerTurn;
 
+                    // Wait for player input to continue
                     Utility::waitForEnter();
                 }
 
-                if (player.isFainted())
+                // Check if the player is defeated
+                if (game.getPlayer().isFainted())
                 {
                     break;
                 }
             }
+
+            // Handle battle outcome
             handleBattleOutcome(level);
         }
 
         void updateBattleState(size_t i)
         {
-            if (enemy.minions[i].isFainted())
+            if (game.getEnemy().minions[i].isFainted())
             {
                 battleOngoing = false;
             }
-            else if (player.isFainted())
+            else if (game.getPlayer().isFainted())
             {
                 battleOngoing = false;
             }
-
         }
 
         void handleBattleOutcome(int level)
         {
-            if (player.isFainted())
+            if (game.getPlayer().isFainted())
             {
-                std::cout << player.getName() << "has defeated! You lose the Battle." << endl;
+                std::cout << game.getPlayer().getName() << " has been defeated! You lose the Battle." << endl;
             }
             else
             {
@@ -604,7 +674,7 @@ namespace N_BattleManager
                 case 4:
                 case 5:
                     std::cout << "You defeated the Murlocks minions! You have unlocked ";
-                    player.displayItems(level + 1);
+                    game.getPlayer().displayItems(level + 1);
                     std::cout << "!" << endl;
                     break;
                 case 6:
@@ -630,9 +700,6 @@ namespace N_Game {
     using namespace N_Utility;
     using namespace N_Character;
     using namespace N_BattleManager;
-
-    Enemy enemy;
-    BattleManager battleManager;
 
     void Game::handleStartInput()
     {
@@ -666,7 +733,7 @@ namespace N_Game {
             "\nfor the tale of Luminara is one of both beauty and tragedy." << endl;
         std::cout << "\n[Press Enter to continue...]" << endl;
         Utility::waitForEnter();
-        introStory.midStoryPart(*this);
+        introStory->midStoryPart(*this);
     }
 
     void Game::handleContinueInput()
@@ -694,6 +761,7 @@ namespace N_Game {
 
     void Game::handleContinuePart()
     {
+        Utility::clearConsole();
         std::cout << "You have chosen to continue. Your quest will take you through six trials,"
             "\neach more challenging than the last. Along the way, you will face Murlock's"
             "\nminions and acquire powerful items to aid you in your final battle. Prepare"
@@ -726,7 +794,8 @@ namespace N_Game {
             break;
         }
     }
-    void Game::enterLevel(int level, Player& player)
+
+    void Game::enterLevel(int level)
     {
         enemy.minions.clear();
         Utility::clearConsole();
@@ -752,6 +821,8 @@ namespace N_Game {
             player.displayItems(level + 1);
             std::cout << " a crucial artifact." << endl;
             break;
+        case 6:
+            std::cout << "\nKael, the moment has come. You finally stand before the Murlock";
         }
         Utility::waitForEnter();
         if (level == 1)
@@ -763,42 +834,61 @@ namespace N_Game {
             std::cout << "\n[Press Enter to continue...]" << endl;
             Utility::waitForEnter();
         }
+        else if (level == 6)
+        {
+            std::cout << "\nMurlock: You’re persistent, Kael. But your journey ends here!" << std::endl;
+            std::cout << "\n[Press Enter to continue...]" << std::endl;
+            Utility::waitForEnter();
+
+            std::cout << "\nKael: Hand over the Eclipse Blade, Murlock. It belongs to Luminara—you have \nno right to hold such a legendary weapon!" << std::endl;
+            std::cout << "\n[Press Enter to continue...]" << std::endl;
+            Utility::waitForEnter();
+
+            std::cout << "\nMurlock: Hah! You think you’re worthy of its power? This blade will bring \nnothing but destruction!" << std::endl;
+            std::cout << "\n[Press Enter to continue...]" << std::endl;
+            Utility::waitForEnter();
+
+            std::cout << "\nKael: I’ll decide its fate. But first, I have to deal with you!" << std::endl;
+            std::cout << "\n[Press Enter to continue...]" << std::endl;
+            Utility::waitForEnter();
+
+        }
         switch (level)
         {
         case 1:
-            enemy.minions.push_back(Enemy("Goblin", 55, 55, 10, 5, 2));
+            enemy.minions.push_back(Enemy("Goblin", 70, 70, 10, 15, 3));
             break;
 
         case 2:
-            enemy.minions.push_back(Enemy("Goblin", 55, 55, 10, 5, 2));
-            enemy.minions.push_back(Enemy("Troll", 70, 70, 20, 10, 4));
+            enemy.minions.push_back(Enemy("Goblin", 70, 70, 10, 15, 3));
+            enemy.minions.push_back(Enemy("Troll", 120, 120, 20, 25, 5));
             break;
         case 3:
-            enemy.minions.push_back(Enemy("Goblin", 55, 55, 10, 5, 2));
-            enemy.minions.push_back(Enemy("Troll", 70, 70, 20, 10, 4));
-            enemy.minions.push_back(Enemy("Orge", 100, 100, 40, 25, 8));
+            enemy.minions.push_back(Enemy("Goblin", 70, 70, 10, 15, 3));
+            enemy.minions.push_back(Enemy("Troll", 120, 120, 20, 25, 5));
+            enemy.minions.push_back(Enemy("Orge", 180, 180, 30, 35, 10));
             break;
         case 4:
-            enemy.minions.push_back(Enemy("Goblin", 55, 55, 10, 5, 2));
-            enemy.minions.push_back(Enemy("Troll", 70, 70, 20, 12, 4));
-            enemy.minions.push_back(Enemy("Orge", 100, 120, 40, 25, 8));
-            enemy.minions.push_back(Enemy("Dark Elf", 160, 160, 80, 45, 15));
+            enemy.minions.push_back(Enemy("Goblin", 70, 70, 10, 15, 3));
+            enemy.minions.push_back(Enemy("Troll", 120, 120, 20, 25, 5));
+            enemy.minions.push_back(Enemy("Orge", 180, 180, 30, 35, 10));
+            enemy.minions.push_back(Enemy("Dark Elf", 250, 250, 40, 45, 15));
             break;
         case 5:
-            enemy.minions.push_back(Enemy("Goblin", 55, 55, 10, 5, 2));
-            enemy.minions.push_back(Enemy("Troll", 70, 70, 20, 10, 10));
-            enemy.minions.push_back(Enemy("Orge", 100, 120, 40, 25, 20));
-            enemy.minions.push_back(Enemy("Dark Elf", 160, 160, 80, 45, 45));
-            enemy.minions.push_back(Enemy("Hobgoblin", 230, 230, 160, 70, 90));
+            enemy.minions.push_back(Enemy("Goblin", 70, 70, 10, 15, 3));
+            enemy.minions.push_back(Enemy("Troll", 120, 120, 20, 25, 5));
+            enemy.minions.push_back(Enemy("Orge", 180, 180, 30, 35, 10));
+            enemy.minions.push_back(Enemy("Dark Elf", 250, 250, 40, 45, 15));
+            enemy.minions.push_back(Enemy("Hobgoblin", 350, 350, 50, 55, 20));
             break;
         case 6:
-            enemy.minions.push_back(Enemy("Murlock", 1300, 1300, 500, 350, 200));
+            enemy.minions.push_back(Enemy("Murlock", 600, 600, 70, 80, 30));
             break;
         }
-        displayLevelStats(level, player, enemy);
+        displayLevelStats(level);
     }
 
-    void Game::displayLevelStats(int level, Player& player, Enemy& enemy)
+    void Game::displayLevelStats(int level)
     {
         std::cout << "**-----------------------------------------------------------------------**" << endl;
         std::cout << "                       Level " << level << " : stats                       " << endl;
@@ -806,12 +896,13 @@ namespace N_Game {
         player.displayPlayerStat(level);
         std::cout << "**-----------------------------------------------------------------------**" << endl;
         enemy.displayEnemyStat(level);
+        BattleManager battleManager(*this);
         battleManager.startBattle(level);
         std::cout << "\n[Press Enter to continue...]" << endl;
         Utility::waitForEnter();
     }
 
-    void Game::increasePlayerStat(int level, Player& player)
+    void Game::increasePlayerStat(int level)
     {
         player.increasePlayerStat(level);
     }
@@ -819,10 +910,9 @@ namespace N_Game {
 
 int main() {
     srand(time(0));
-    N_Game::Player player;
     N_Game::Game game;
 
-    game.gameLoop(player);
+    game.gameLoop();
 
     return 0;
 }
