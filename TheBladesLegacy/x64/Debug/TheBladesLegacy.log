@@ -1,5 +1,6 @@
 ﻿  Main.cpp
-F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(559,81): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(621,81): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(914,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(356,56): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(655,81): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(723,81): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\CPP Projects\TheBladesLegacy\TheBladesLegacy\Main.cpp(1027,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   TheBladesLegacy.vcxproj -> F:\CPP Projects\TheBladesLegacy\x64\Debug\TheBladesLegacy.exe
