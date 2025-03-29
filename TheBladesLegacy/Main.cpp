@@ -252,11 +252,11 @@ namespace N_Character
                 int tempDamage = 2 * getRangedDamage();        //Variable to perform temperary dmage  and giving damage twite of the ranged damage
                 target.takeDamage(tempDamage);      //passing temperary damage to takedamage method of current object 
             }
-            else if (chooseRangeDamage == 2 || chooseRangeDamage == 5 || chooseRangeDamage == 11 || chooseRangeDamage ==17) //Ranged attack damage logic (20 % chances) 
+            else if (chooseRangeDamage == 2 || chooseRangeDamage == 5 || chooseRangeDamage == 11 || chooseRangeDamage == 17) //Ranged attack damage logic (20 % chances) 
             {
                 cout << getName() << " launches a powerful ranged attack!" << endl;
                 target.takeDamage(getRangedDamage());
-                if (index >= 5 && (chooseRangeDamage ==  5 || chooseRangeDamage == 15))
+                if (index >= 5 && (chooseRangeDamage == 5 || chooseRangeDamage == 15))
                 {
                     avoidNextAttack = true;
                     cout << getName() << "avoids the next enemy attack!" << endl;
@@ -287,7 +287,7 @@ namespace N_Character
             }
         }
 
-    }; 
+    };
 
     //Derived Enemy class inherits from character class
     class Enemy : public Character
@@ -462,7 +462,7 @@ namespace N_Game
         }
 
         //Getters for player and enemy object
-        Player& getPlayer() { return player; }  
+        Player& getPlayer() { return player; }
         Enemy& getEnemy() { return enemy; }
 
         //Main game loop
@@ -492,10 +492,10 @@ namespace N_Game
                 while (true)  //Loop to till press R o E 
                 {
                     string input = getInput();
-                    if (input == "R")  
+                    if (input == "R")
                     {
                         player.reset(); //Reset function to reset all variables
-                        isPlaying = true; 
+                        isPlaying = true;
                         level = 1;
                         N_Utility::Utility::clearConsole();  //Clear function to clear console befor restart
                         break;   //Exit the loop
@@ -519,7 +519,6 @@ namespace N_Game
         void handleContinuePart();   //Function to handle the continuation of the game
         void enterLevel(int level); //Function to enter the levels and initialize the enemy
         void displayLevelStats(int level);  //Function to display the stats depending on level
-        void increasePlayerStat(int level);  //Fucntion to increase the stat of player with levels
         void displayLevelTitle(int level);  //Function to display level titles
     };
 }
@@ -581,8 +580,6 @@ namespace N_Narration
             "\nhelp, and their pleas reached Kael, who now races back to save his home. But the journey"
             "\nis fraught with danger, and Kael must gather powerful artifacts to stand a chance against\n"
             "\nMurlock. Will you continue this journey and help Kael save Luminara? Press C to continue\nor Q to quit." << endl;
-        std::cout << "\n[Press Enter to continue...]" << endl;
-        Utility::waitForEnter();
         game.handleContinueInput();  //Calling function to handle the continue input to continue or quit
     }
 }
@@ -608,7 +605,7 @@ namespace N_BattleManager
         //Function to start a battle
         void startBattle(int level)
         {
-            playerTurn = true; 
+            playerTurn = true;
             battleOngoing = true;
             battle(level); //Calling battle function to begin the battle by passing levels to it
         }
@@ -649,7 +646,7 @@ namespace N_BattleManager
                             }
                         }
 
-                        if (input == "1") 
+                        if (input == "1")
                         {
                             // Player chooses to attack
                             game.getPlayer().attack(game.getEnemy().minions[i], i);
@@ -706,7 +703,7 @@ namespace N_BattleManager
                     }
                     else
                     {
-                        if(game.getPlayer().shouldAvoidAttack())
+                        if (game.getPlayer().shouldAvoidAttack())
                         {
                             cout << game.getPlayer().getName() << " avoids the enemy's attack!" << endl;
                             game.getPlayer().resetAvoidAttack(); // Reset the flag
@@ -771,7 +768,7 @@ namespace N_BattleManager
             }
             else //The enemy is defeated and player wins
             {
-                switch (level) 
+                switch (level)
                 {
                 case 1:
                 case 2:
@@ -843,7 +840,7 @@ namespace N_Game {
         Utility::waitForEnter();
         introStory->midStoryPart(*this);  //Continues to the mid-story part
     }
-    
+
     //Function to handle the player's decision to continue or quit
     void Game::handleContinueInput()
     {
@@ -871,8 +868,7 @@ namespace N_Game {
     //Function to handle the continuation of the game
     void Game::handleContinuePart()
     {
-        Utility::clearConsole();
-        std::cout << "You have chosen to continue. Your quest will take you through six trials,"
+        std::cout << "\nYou have chosen to continue. Your quest will take you through six trials,"
             "\neach more challenging than the last. Along the way, you will face Murlock's"
             "\nminions and acquire powerful items to aid you in your final battle. Prepare"
             "\nyourself, brave one, for the path ahead is treacherous." << endl;
